@@ -1,6 +1,8 @@
 const { User, Thought, Reaction } = require('../models');
 
 const thoughtController = {
+
+    // GET /api/thoughts
     getAllThoughts(req, res) {
         Thought.find({})
         .populate({ path: 'reactions', select: '-__v' })
@@ -11,6 +13,8 @@ const thoughtController = {
             res.status(500).json(err);
         })
     },
+
+    // GET /api/thoughts/:id
     getThoughtById({ params }, res) {
         Thought.findOne({ _id: params.id })
         .populate({ path: 'reactions', select: '-__v' })
@@ -27,6 +31,14 @@ const thoughtController = {
             res.status(400).json(err);
         });
     },
+
+    // POST /api/thoughts
+    // expected body:
+    // {
+    //     "thoughtText": "foo",
+    //     "username": "bar",  // should be a username that corresponds to a User instance
+    //     "userId": "baz"  // should be a userId that corresponds to the same User instance as username
+    // }
     createThought({ body }, res) {
         Thought.create(body)
         .then(dbThoughtData => {
@@ -46,6 +58,14 @@ const thoughtController = {
         })
         .catch(err => res.status(400).json(err));
     },
+
+    // PUT /api/thoughts/:id
+    // expected body should include at least one of the following attributes:
+    // {
+    //     "thoughtText": "foo",
+    //     "username": "bar",  // should be a username that corresponds to a User instance
+    //     "userId": "baz"  // should be a userId that corresponds to the same User instance as username
+    // }
     updateThought({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.id },
@@ -61,6 +81,9 @@ const thoughtController = {
         })
         .catch(err => res.status(400).json(err));
     },
+
+
+    // DELETE /api/thoughts/:id
     deleteThought({ params }, res) {
         // delete the thought
         Thought.findOneAndDelete({ _id: params.id })
@@ -81,6 +104,8 @@ const thoughtController = {
         })
         .catch(err => res.status(500).json(err));
     },
+
+    // POST /api/thoughts/:id/reactions
     addReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
@@ -96,6 +121,12 @@ const thoughtController = {
         })
         .catch(err => res.status(500).json(err));
     },
+
+    // DELETE /api/thoughts/:id/reactions
+    // expected body should include at least one of the following attributes:
+    // {
+    //     "reactionId": "baz"  // should be a reactionId in the specified Thought instance
+    // }
     deleteReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
