@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const PizzaSchema = new Schema({
+const UserSchema = new Schema({
     username: {
         type: String,
         required: true,
@@ -11,24 +11,23 @@ const PizzaSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true,
-        validate: email
+        unique: true
     },
     thoughts: [],
     friends: []
 },
 {
     toJSON: {
-        virtuals: true,
-        getters: true
+        virtuals: true
     },
     id: false
 });
 
-User.virtual('friendCount').get(function() {
+UserSchema.virtual('friendCount').get(function() {
     return this.friends.length;
 });
 
 const User = model('User', UserSchema);
+
 
 module.exports = User;

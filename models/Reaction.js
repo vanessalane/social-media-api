@@ -21,6 +21,12 @@ const ReactionSchema = new Schema({
         get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a')
     },
     reactions: []
+},
+{
+    toJSON: {
+        getters: true
+    },
+    id: false
 });
 
 const Reaction = model('Reaction', ReactionSchema);
