@@ -5,16 +5,13 @@ const userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true
+        unique: "username must be unique"
     },
     email: {
         type: String,
         required: true,
-        trim: true,
-        validate: function validateEmail(email) {
-            const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return regex.test(String(email).toLowerCase());
-        }
+        unique: true,
+        match: [/.+@.+\..+/]
     },
     thoughts: [{ type: Schema.Types.ObjectId, ref: 'Thought' }],
     friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
